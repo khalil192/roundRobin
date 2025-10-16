@@ -1,5 +1,5 @@
+#in case of any script termination flow, kill all the child process
 trap cleanup INT TERM EXIT
-
 
 #killing all the child processes of this script
 cleanup() {

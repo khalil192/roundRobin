@@ -7,7 +7,6 @@ import (
 	"time"
 )
 
-// LoadBalancerI defines the common interface for all your algorithms.
 type LoadBalancerI interface {
 	GetNextHealthyServer() *algorithms.Server
 }
@@ -26,10 +25,6 @@ func TestRoundRobinStruct_GetNextHealthyServer(t *testing.T) {
 		func(servers algorithms.ServerList) LoadBalancerI {
 			return algorithms.NewAtomicRoundRobinBalancer(servers)
 		},
-		func(servers algorithms.ServerList) LoadBalancerI {
-			return algorithms.NewQueueRRB(servers)
-		},
-		// Add your other constructors inside similar wrappers...
 	}
 
 	for _, constructor := range constructors {

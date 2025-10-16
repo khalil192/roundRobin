@@ -1,8 +1,4 @@
 URL,Healthy,Served Requests,Failed Requests
-http://localhost:8081,true,59391,2
-http://localhost:8082,true,59397,6
-http://localhost:8080,true,59399,2
-http://localhost:8083,true,59414,2
 http://localhost:8084,false,0,0
 http://localhost:8085,false,0,0
 http://localhost:8086,false,0,0
@@ -19,3 +15,7 @@ http://localhost:8096,false,0,0
 http://localhost:8097,false,0,0
 http://localhost:8098,false,0,0
 http://localhost:8099,false,0,0
+http://localhost:8080,false,26866,37
+http://localhost:8083,false,26862,34
+http://localhost:8081,false,26883,53
+http://localhost:8082,false,26841,11
