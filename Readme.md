@@ -41,6 +41,7 @@ Requirements: All implementations should be thread safe.
 - `Separate slice` Implementation is the solution for this, maintaining a separate array/slice for healthy and unhealthy servers.
 - `Separate Slice` Implementation uses `Read` lock during GetNextHealthyServer() ensuring Massive parallel read throughput and it only uses write lock when updating the data of server.
 
+`Bonus` : I added a periodic health check worker which checks the health of servers in background (for every x secs) and updates the server health.
 
 The interface is built in a plug-n-play fashion which makes adding newer algorithms/implementations very easy:
 Sample MR for reference: https://github.com/khalil192/roundRobin/pull/3.

@@ -24,6 +24,7 @@ func NewSeparateSlice(serverList []*Server) *HealthySlice {
 }
 
 func (lb *HealthySlice) GetNextHealthyServer() *Server {
+	//only read lock to enable high throughput for parallel reads.
 	lb.mu.RLock()
 	defer lb.mu.RUnlock()
 
@@ -32,13 +33,15 @@ func (lb *HealthySlice) GetNextHealthyServer() *Server {
 		return nil
 	}
 
+	//same as atomic implementation, but only checks in healthy servers
 	nextIndex := atomic.AddUint64(&lb.current, 1)
 
-	idx := int((nextIndex - 1) % uint64(numHealthy))
+	idx := int((nextIndex) % uint64(numHealthy))
 	return lb.healthyServers[idx]
 }
 
 func (lb *HealthySlice) SetServerStatus(server *Server, isHealthy bool) {
+	//write lock to prevent another process writing over our data.
 	lb.mu.Lock()
 	defer lb.mu.Unlock()
 
@@ -49,7 +52,6 @@ func (lb *HealthySlice) SetServerStatus(server *Server, isHealthy bool) {
 		lb.healthyServers, lb.unhealthyServers = lb.transferElementFrom(lb.healthyServers, lb.unhealthyServers, server)
 		server.setHealthy(false)
 	}
-
 }
 
 func (lb *HealthySlice) transferElementFrom(src ServerList, dest ServerList, target *Server) (ServerList, ServerList) {

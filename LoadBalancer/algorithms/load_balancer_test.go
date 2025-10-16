@@ -1,6 +1,7 @@
 package algorithms_test
 
 import (
+	"fmt"
 	"github.com/go-playground/assert/v2"
 	"roundrobin/LoadBalancer/algorithms"
 	"testing"
@@ -72,6 +73,25 @@ func TestRoundRobinStruct_GetNextHealthyServer(t *testing.T) {
 			assert.Equal(t, s1.URL.String(), urls[0])
 			assert.Equal(t, s2.URL.String(), urls[0])
 			assert.Equal(t, s3.URL.String(), urls[0])
+		})
+
+		t.Run("should return all servers irrespective of their health status", func(t *testing.T) {
+			urls := make([]string, 0)
+			for i := 0; i < 10; i++ {
+				urls = append(urls, fmt.Sprintf("localhost:%d", 8080+i))
+			}
+
+			serverList := algorithms.NewServerList(urls)
+			lb := algorithms.NewAtomicRoundRobinBalancer(serverList)
+
+			for i := range serverList {
+				if i%2 == 0 {
+					lb.SetServerStatus(serverList[i], false)
+				}
+			}
+
+			allServers := lb.GetAllServers()
+			assert.Equal(t, len(serverList), len(allServers))
 		})
 	}
 
