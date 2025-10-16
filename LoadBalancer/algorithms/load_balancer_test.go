@@ -25,6 +25,9 @@ func TestRoundRobinStruct_GetNextHealthyServer(t *testing.T) {
 		func(servers algorithms.ServerList) LoadBalancerI {
 			return algorithms.NewAtomicRoundRobinBalancer(servers)
 		},
+		func(servers algorithms.ServerList) LoadBalancerI {
+			return algorithms.NewQueueRRB(servers)
+		},
 	}
 
 	for _, constructor := range constructors {

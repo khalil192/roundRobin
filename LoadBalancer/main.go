@@ -61,6 +61,9 @@ func getLoadBalancer(algorithm string, serverList []*algorithms.Server) LoadBala
 		return algorithms.NewAtomicRoundRobinBalancer(serverList)
 	case "separate_slice":
 		return algorithms.NewSeparateSlice(serverList)
+	case "queue":
+		return algorithms.NewQueueRRB(serverList)
+
 	}
 	return nil
 }
