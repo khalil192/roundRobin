@@ -60,6 +60,20 @@ Testing and Results:
 - `Stresstest` folder contains the go script which makes concurrent requests to reverse proxy server.
 - the final results are posted to server_stats.csv
 
+
+`Results`: for the testcase:
+
+- total of 50000 requests sent via 100 concurrent channels.
+- total 30 servers out of which only 5 are healthy.
+
+| Implementation | Lock | Atomic | Separate Slice | Queue |
+|----------------|------|--------|----------------|-------|
+| Seconds        | 4.85 | 3.3    | 2.94           | 2.9   |
+
+Note:
+The results are only an indicator of  relative differences between the implementations and not absolute performance.
+As i'm running the test on a single local machine, BE server, proxy server, stresstest client all compete for the same resource.
+
 --------------------
 
 Running the code: 
@@ -68,7 +82,7 @@ Install all dependencies:
 - `go mod tidy` 
 
 Read the script file and configure as per requirements:
-- sh run.sh
+- `sh run.sh`
 
 
 ---------------- 
