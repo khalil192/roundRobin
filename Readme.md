@@ -1,16 +1,20 @@
 
 I loved solving this problem:)
 
-I understood that solving for scale was the real challenge here, ensuring that the system could handle a high concurrent load.
+-----------------------------------
+Problem Statement: Implement a reverse-proxy server which uses round-robin algorithm to route the requests to one of the BE server.
 
-I love to build testable systems, and since round-robin can be implemented in several ways, I wanted to try different approaches and compare their throughput and fairness. 
+Core problem to solve: Handling heavy concurrent load and ensuring fairness of allocation.
 
-Hence, I decided to build a testable LoadBalancer interface first. With a proper interface in place, I can plug in new implementations and even new resource allocation algorithms in a "plug-and-play" fashion.
+Tech stack used: `Golang`, `shell-script`.
 
+--------------------------
+
+Since round-robin can be implemented in several ways, I wanted to try different approaches and compare their throughput and fairness. 
 
 The project is a mono repo with three directories and a shell file in the root:
 
-- BackendServer: A dummy server, of which we will spawn multiple instances.
+- BackendServer: A dummy server, we will spawn multiple instances.
 
 - LoadBalancer: The core of the project. A reverse proxy server that forwards requests from the client to one of the BackendServer instances.
   - The HTTP reverse proxy server is decoupled from the algorithm's logic.
@@ -36,7 +40,7 @@ Requirements: All implementations should be thread safe.
 - `Global Lock version` is taking too much time under heavy load. Since its efficient to lock the whole loadbalancer's data(serverList)
 - Improved upon it by using `atomic operations` instead of mutex lock for fetching the next Healthy Server.
 - Atomic is performing good and in case of huge concurrent requests, atomic implementation is 2X speed than global_lock.
-- I didn't stop there, I identified Atomic implementation lagging when the healthy servers are skewed in the list, since we traverse the whole list till we find the next healthy server.
+- I identified Atomic implementation lagging when the healthy servers are skewed in the list, since we traverse the whole list till we find the next healthy server.
 - To make it better I want to have an implementation where we store all the healthy servers in one place, then we don't need to traverse anything.
 - `Separate slice` Implementation is the solution for this, maintaining a separate array/slice for healthy and unhealthy servers.
 - `Separate Slice` Implementation uses `Read` lock during GetNextHealthyServer() ensuring Massive parallel read throughput and it only uses write lock when updating the data of server.
